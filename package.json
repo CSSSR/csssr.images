@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "description": "Utilities for Webpack and React to simplify images workflow",
   "main": "dist/index.js",
-  "types": "dist/types.d.ts",
+  "types": "dist",
   "engines": {
     "node": ">= 11.10.1"
   },
@@ -11,7 +11,10 @@
     "test": "jest",
     "lint": "eslint --fix ./src ./example",
     "run-example": "webpack --config example/webpack.config.ts && http-server -p 8081 example",
-    "build": "tsc --declaration true"
+    "build": "tsc --declaration true",
+    "prepare": "npm run build",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean"
   },
   "keywords": [
     "webpack",
