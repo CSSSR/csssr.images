@@ -1,24 +1,21 @@
 import React from 'react';
-import { ImageSource, ImgproxyResponsiveLoaderResult } from '../types';
+import { ImgproxyResponsiveLoaderResult, PictureData } from '../types';
 import RequireContext = __WebpackModuleApi.RequireContext;
+import { getPictureData } from '../utils/utils';
 
 export type PictureCommonProps = {
   alt: string;
+  className?: string;
+  testid?: string;
 };
 
-export type PictureData = {
-  sources: ImageSource[];
-  fallbackSrcSet: string;
-  fallbackSrc: string;
-};
-
-export type PictureInternalProps = {
+export type PictureProps = {
   pictureData: PictureData;
 } & PictureCommonProps;
 
-export const PictureInternal: React.FC<PictureInternalProps> = ({ pictureData, alt }) => {
+export const Picture: React.FC<PictureProps> = ({ pictureData, alt, className, testid }) => {
   return (
-    <picture>
+    <picture className={className}>
       {pictureData.sources.map(({ breakpointName, breakpointMedia, extension, srcSet }) => {
         return (
           <source
@@ -29,32 +26,23 @@ export const PictureInternal: React.FC<PictureInternalProps> = ({ pictureData, a
           />
         );
       })}
-      <img srcSet={pictureData.fallbackSrcSet} src={pictureData.fallbackSrc} alt={alt} />
+      <img
+        srcSet={pictureData.fallbackSrcSet}
+        src={pictureData.fallbackSrc}
+        data-testid={testid}
+        alt={alt}
+      />
     </picture>
   );
 };
 
-export type PictureProps = {
+export type PictureSmartProps = {
   requireImages: RequireContext;
 } & PictureCommonProps;
 
-const getPictureData = (requireFn: RequireContext): PictureData => {
-  const allSources = requireFn.keys().map<ImgproxyResponsiveLoaderResult>(requireFn);
-
-  // Сортировка sources в порядке списка breakpoints
-  allSources.sort((a, b) => a.order - b.order);
-
-  const lastSource = allSources[allSources.length - 1];
-
-  return {
-    sources: allSources.map<ImageSource[]>((source) => source.data).flat(),
-    fallbackSrcSet: lastSource.data[lastSource.data.length - 1].srcSet,
-    fallbackSrc: lastSource.fallbackSrc,
-  };
-};
-
-export const Picture: React.FC<PictureProps> = (props) => {
+export const PictureSmart: React.FC<PictureSmartProps> = (props) => {
   const { requireImages, ...rest } = props;
-  const pictureData = getPictureData(requireImages);
-  return <PictureInternal pictureData={pictureData} {...rest} />;
+  const allSources = requireImages.keys().map<ImgproxyResponsiveLoaderResult>(requireImages);
+  const pictureData = getPictureData(allSources);
+  return <Picture pictureData={pictureData} {...rest} />;
 };

@@ -3,29 +3,10 @@ import path from 'path';
 import loaderUtils from 'loader-utils';
 import validateOptions from 'schema-utils';
 import { getImgproxyUrlBuilder } from './imgproxyUrlBuilder';
-import { Breakpoint, ImgproxyResponsiveLoaderResult, SrcSet } from '../types';
+import { Breakpoint, ImgproxyResponsiveLoaderResult } from '../types';
 import { imageUrls } from './plugin';
 import { schema } from './loaderOptionsSchema';
-
-export const getSrcSetString = (srcSet: SrcSet): string => {
-  return Object.entries(srcSet)
-    .map(([pixelRatio, url]) => `${url} ${pixelRatio}`)
-    .join(', ');
-};
-
-export const getBreakpointMedia = (breakpoint: Breakpoint): string => {
-  let result = '';
-  if (breakpoint.minWidth) {
-    result += `(min-width: ${breakpoint.minWidth}px)`;
-  }
-  if (breakpoint.minWidth && breakpoint.maxWidth) {
-    result += ' and ';
-  }
-  if (breakpoint.maxWidth) {
-    result += `(max-width: ${breakpoint.maxWidth}px)`;
-  }
-  return result;
-};
+import { getBreakpointMedia, getSrcSetString } from '../utils/utils';
 
 // Каждый импорт картинки проходит через этот лоадер и на выходе
 // для каждой картинки получится массив с двумя значениями –
@@ -61,7 +42,7 @@ export default function (this: webpack.loader.LoaderContext, source: string): st
   // Получаем путь до картинки (outputImagePath = '/build/myImage/mobile.all-4b767a7b.png')
   const outputImagePath = source.replace(/^module.exports = "(.+)";$/, (_, imagePath) => imagePath);
 
-  const buildUrlsForAllPixelRatios = getImgproxyUrlBuilder(options.imgproxy)
+  const buildUrlsForAllPixelRatios = getImgproxyUrlBuilder(options.imgproxy);
   const webpSrcSet = buildUrlsForAllPixelRatios(outputImagePath, 'webp');
   const originalExtensionSrcSet = buildUrlsForAllPixelRatios(outputImagePath, originalExtension);
 

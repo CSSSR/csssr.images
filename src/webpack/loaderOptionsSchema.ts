@@ -1,4 +1,4 @@
-import { JSONSchema7 } from 'json-schema'
+import { JSONSchema7 } from 'json-schema';
 
 export const schema: JSONSchema7 = {
   type: 'object',
@@ -48,4 +48,4 @@ export const schema: JSONSchema7 = {
   },
   required: ['breakpoints', 'imgproxy'],
   additionalProperties: false,
-}
+};

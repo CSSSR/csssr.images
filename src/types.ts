@@ -13,8 +13,14 @@ export type ImageSource = {
 
 export type ImgproxyResponsiveLoaderResult = {
   order: number;
-  data: ImageSource[];
+  data: [ImageSource, ImageSource];
   fallbackSrc: string;
 };
 
 export type Breakpoint = { name: string; minWidth?: number; maxWidth?: number };
+
+export type PictureData = {
+  sources: ImageSource[];
+  fallbackSrcSet: string;
+  fallbackSrc: string;
+};
