@@ -22,7 +22,7 @@ export default function (this: webpack.loader.LoaderContext, source: string): st
   // Получаем оригинальное имя файла изображения (originalImageFileName = mobile.all.png)
   const originalImageFileName = path.relative(this.context, this.resourcePath);
 
-  const escapedBreakpointsNames = breakpoints.map((x) => x.name.replace('.', '\\.'));
+  const escapedBreakpointsNames = breakpoints.map((item) => item.name.replace('.', '\\.'));
   const regexp = new RegExp(`^(${escapedBreakpointsNames.join('|')})\\.(png|jpg|jpeg|gif)$`);
 
   const matches = originalImageFileName.match(regexp);
