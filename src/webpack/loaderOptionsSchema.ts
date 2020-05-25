@@ -40,10 +40,8 @@ export const schema: JSONSchema7 = {
       properties: {
         imagesHost: { type: 'string' },
         host: { type: 'string' },
-        key: { type: 'string' },
-        salt: { type: 'string' },
       },
-      required: ['imagesHost', 'host', 'key', 'salt'],
+      required: ['imagesHost', 'host'],
     },
   },
   required: ['breakpoints', 'imgproxy'],

@@ -1,11 +1,10 @@
 import Imgproxy from 'imgproxy';
 import { SrcSet } from '../types';
+import { ImgproxyConfig, ImgproxySecureConfig } from 'imgproxy/dist/types'
 
 type ImgproxyUrlBuilderConfig = {
   imagesHost: string;
   host: string;
-  key: string;
-  salt: string;
 };
 
 export type BuildUrlsForAllPixelRatios = (imagePath: string, extension: string) => SrcSet;
@@ -13,13 +12,9 @@ export type BuildUrlsForAllPixelRatios = (imagePath: string, extension: string) 
 export const getImgproxyUrlBuilder = ({
   imagesHost,
   host,
-  key,
-  salt,
 }: ImgproxyUrlBuilderConfig): BuildUrlsForAllPixelRatios => {
   const imgproxy = new Imgproxy({
     baseUrl: host,
-    key,
-    salt,
     encode: false,
   });
 
