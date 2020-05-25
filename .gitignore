@@ -4,3 +4,5 @@ lib/
 report.*.json
 *.log
 *.icloud
+dist/
+example/build
