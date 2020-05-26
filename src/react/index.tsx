@@ -1,7 +1,7 @@
 import React from 'react';
 import { ImgproxyResponsiveLoaderResult, PictureData } from '../types';
 import RequireContext = __WebpackModuleApi.RequireContext;
-import { getPictureData } from '../utils/utils';
+import { getPictureData } from '../utils';
 
 export type PictureCommonProps = {
   alt: string;

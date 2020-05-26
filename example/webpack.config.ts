@@ -1,6 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
-import { Plugin } from '../src';
+import { Plugin } from '../src/webpack';
 import { breakpoints } from './breakpoints';
 
 const config: webpack.Configuration = {
@@ -26,7 +26,7 @@ const config: webpack.Configuration = {
         test: /\.(jpe?g|png|gif)$/,
         use: [
           {
-            loader: path.resolve(__dirname, '../src/webpack/loader.ts'),
+            loader: path.resolve(__dirname, '../src/index.ts'),
             options: {
               breakpoints,
               imgproxy: {

@@ -1,4 +1,4 @@
-import { getBreakpointMedia } from '../../utils/utils';
+import { getBreakpointMedia } from '../index';
 
 test('breakpoint has both min and max width', () => {
   expect(

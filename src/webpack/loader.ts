@@ -6,12 +6,12 @@ import { getImgproxyUrlBuilder } from './imgproxyUrlBuilder';
 import { Breakpoint, ImgproxyResponsiveLoaderResult } from '../types';
 import { imageUrls } from './plugin';
 import { schema } from './loaderOptionsSchema';
-import { getBreakpointMedia, getSrcSetString } from '../utils/utils';
+import { getBreakpointMedia, getSrcSetString } from '../utils';
 
 // Каждый импорт картинки проходит через этот лоадер и на выходе
 // для каждой картинки получится массив с двумя значениями –
 // srcset'ы для webp и srcset для оригинального расширения изображения
-export default function (this: webpack.loader.LoaderContext, source: string): string {
+export const loader = function (this: webpack.loader.LoaderContext, source: string): string {
   const options = loaderUtils.getOptions(this);
 
   validateOptions(schema, options, { name: 'Imgproxy responsive loader', baseDataPath: 'options' });

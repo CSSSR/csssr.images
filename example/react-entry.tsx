@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { PictureSmart } from '../src';
+import { PictureSmart } from '../src/react';
 
 const imagesCover = require.context('./images/myImage');
 const images500 = require.context('./images/image500');

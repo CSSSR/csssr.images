@@ -7,7 +7,7 @@ export const imageUrls: string[] = [];
 
 const pluginName = 'CollectAllImageUrlsPlugin';
 
-class Plugin {
+export class Plugin {
   apply(compiler: Compiler): void {
     compiler.hooks.done.tap(pluginName, function () {
       // TODO emit file here
@@ -15,5 +15,3 @@ class Plugin {
     });
   }
 }
-
-export default Plugin;
