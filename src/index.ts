@@ -1,3 +1,3 @@
 import { loader } from './webpack';
 
-export default loader
+export default loader;

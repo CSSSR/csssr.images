@@ -13,7 +13,7 @@ export type ImageSource = {
 
 export type ImgproxyResponsiveLoaderResult = {
   order: number;
-  data: [ImageSource, ImageSource];
+  data: ImageSource[];
   fallbackSrc: string;
 };
 

@@ -30,6 +30,7 @@ const config: webpack.Configuration = {
             options: {
               breakpoints,
               imgproxy: {
+                disable: false,
                 imagesHost: 'http://192.168.1.134:8081',
                 host: 'http://localhost:8080',
               },

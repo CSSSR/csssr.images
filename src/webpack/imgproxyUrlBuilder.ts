@@ -1,6 +1,5 @@
 import Imgproxy from 'imgproxy';
 import { SrcSet } from '../types';
-import { ImgproxyConfig, ImgproxySecureConfig } from 'imgproxy/dist/types'
 
 type ImgproxyUrlBuilderConfig = {
   imagesHost: string;

@@ -36,12 +36,17 @@ export const schema: JSONSchema7 = {
       },
     },
     imgproxy: {
-      type: 'object',
-      properties: {
-        imagesHost: { type: 'string' },
-        host: { type: 'string' },
-      },
-      required: ['imagesHost', 'host'],
+      oneOf: [
+        {
+          type: 'object',
+          properties: {
+            disable: { type: 'boolean' },
+            imagesHost: { type: 'string' },
+            host: { type: 'string' },
+          },
+          required: ['imagesHost', 'host'],
+        },
+      ],
     },
   },
   required: ['breakpoints', 'imgproxy'],
