@@ -1,7 +1,7 @@
 import React from 'react';
 import { ImgproxyResponsiveLoaderResult, PictureData } from '../types';
 import RequireContext = __WebpackModuleApi.RequireContext;
-import { getPictureData } from '../utils';
+import { getPictureData, getSrcSetString } from '../utils'
 
 export type PictureCommonProps = {
   alt: string;
@@ -22,12 +22,12 @@ export const Picture: React.FC<PictureProps> = ({ pictureData, alt, className, t
             key={`${breakpointName}_${extension}`}
             media={breakpointMedia}
             type={`image/${extension}`}
-            srcSet={srcSet}
+            srcSet={getSrcSetString(srcSet)}
           />
         );
       })}
       <img
-        srcSet={pictureData.fallbackSrcSet}
+        srcSet={getSrcSetString(pictureData.fallbackSrcSet)}
         src={pictureData.fallbackSrc}
         data-testid={testid}
         alt={alt}

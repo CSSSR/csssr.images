@@ -6,9 +6,9 @@ export type SrcSet = {
 
 export type ImageSource = {
   breakpointName: string;
-  breakpointMedia: string;
+  breakpointMedia: string | undefined;
   extension: string;
-  srcSet: string;
+  srcSet: SrcSet;
 };
 
 export type ImgproxyResponsiveLoaderResult = {
@@ -21,6 +21,6 @@ export type Breakpoint = { name: string; minWidth?: number; maxWidth?: number };
 
 export type PictureData = {
   sources: ImageSource[];
-  fallbackSrcSet: string;
+  fallbackSrcSet: SrcSet;
   fallbackSrc: string;
 };

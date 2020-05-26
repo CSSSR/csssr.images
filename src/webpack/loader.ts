@@ -6,7 +6,11 @@ import { getImgproxyUrlBuilder } from './imgproxyUrlBuilder';
 import { Breakpoint, ImgproxyResponsiveLoaderResult } from '../types';
 import { imageUrls } from './plugin';
 import { schema } from './loaderOptionsSchema';
-import { getBreakpointMedia, getSrcSetString } from '../utils';
+import { getBreakpointMedia } from '../utils';
+
+// Такое имя используется, если нужна одна картинка для всех разрешений
+// В таком случаем не будут сгенерированы медиа выражения для разных breakpoint'ов
+const all = 'all'
 
 // Каждый импорт картинки проходит через этот лоадер и на выходе
 // для каждой картинки получится массив с двумя значениями –
@@ -23,21 +27,21 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
   const originalImageFileName = path.relative(this.context, this.resourcePath);
 
   const escapedBreakpointsNames = breakpoints.map((item) => item.name.replace('.', '\\.'));
-  const regexp = new RegExp(`^(${escapedBreakpointsNames.join('|')})\\.(png|jpg|jpeg|gif)$`);
+  const regexp = new RegExp(`^(?<breakpointName>${escapedBreakpointsNames.join('|')}|${all})\\.(?<originalExtension>png|jpg|jpeg|gif)$`);
 
   const matches = originalImageFileName.match(regexp);
 
-  if (!matches) {
+  if (!matches || !matches.groups) {
     throw new Error(
       `Невалидное имя картинки ${originalImageFileName}. Директория с картинками должна содержать только картинки с именами соответствующими брейкпоинтам. Поддерживаемые расширения png, jpg, jpeg, gif.`,
     );
   }
 
-  const breakpointName = matches[1];
-  const originalExtension = matches[2];
+  const breakpointName = matches.groups['breakpointName']
+  const originalExtension = matches.groups['originalExtension']
 
-  const order = breakpoints.findIndex((breakpoint) => breakpoint.name === breakpointName);
-  const breakpointMedia = getBreakpointMedia(breakpoints[order]);
+  const order = breakpointName === all ? -1 : breakpoints.findIndex((breakpoint) => breakpoint.name === breakpointName);
+  const breakpointMedia = breakpointName === all ? undefined : getBreakpointMedia(breakpoints[order]);
 
   // Получаем путь до картинки (outputImagePath = '/build/myImage/mobile.all-4b767a7b.png')
   const outputImagePath = source.replace(/^module.exports = "(.+)";$/, (_, imagePath) => imagePath);
@@ -55,13 +59,13 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
         breakpointName,
         breakpointMedia,
         extension: 'webp',
-        srcSet: getSrcSetString(webpSrcSet),
+        srcSet: webpSrcSet,
       },
       {
         breakpointName,
         breakpointMedia,
         extension: originalExtension,
-        srcSet: getSrcSetString(originalExtensionSrcSet),
+        srcSet: originalExtensionSrcSet,
       },
     ],
     fallbackSrc: originalExtensionSrcSet['1x'],

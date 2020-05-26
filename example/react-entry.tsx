@@ -5,6 +5,7 @@ import { PictureSmart } from '../src/react';
 const imagesCover = require.context('./images/myImage');
 const images500 = require.context('./images/image500');
 const backendDev = require.context('./images/backendDev');
+const onlyOneResolution = require.context('./images/onlyOneResolution');
 
 ReactDOM.render(
   <div>
@@ -12,6 +13,7 @@ ReactDOM.render(
     <PictureSmart requireImages={imagesCover} alt="alt text" />
     <PictureSmart requireImages={images500} alt="alt text" />
     <PictureSmart requireImages={backendDev} alt="alt text" />
+    <PictureSmart requireImages={onlyOneResolution} alt="alt text" />
   </div>,
   document.getElementById('app'),
 );
