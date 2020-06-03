@@ -8,7 +8,7 @@
     "node": ">= 11.10.1"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
     "lint": "eslint --fix ./src ./example",
     "dev": "webpack --config example/webpack.config.ts && http-server -p 8081 example",
     "build": "tsc --declaration true",
