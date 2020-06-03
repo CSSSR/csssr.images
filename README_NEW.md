@@ -1,3 +1,7 @@
+Opinionated library for handling images.
+
+This library includes helpers for vanilla js, webpack loader, React component
+
 1. На вход конфиг брейкпоинтов:
 [
   {

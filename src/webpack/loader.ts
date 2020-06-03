@@ -3,7 +3,7 @@ import path from 'path';
 import loaderUtils from 'loader-utils';
 import validateOptions from 'schema-utils';
 import { getImgproxyUrlBuilder } from './imgproxyUrlBuilder';
-import { Breakpoint, ImageSource, ImgproxyResponsiveLoaderResult, SrcSet } from '../types';
+import { Breakpoint, OrderedBreakpointSource, SrcSet } from '../types';
 import { imageUrls } from './plugin';
 import { schema } from './loaderOptionsSchema';
 import { getBreakpointMedia } from '../utils';
@@ -53,6 +53,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
   const breakpointName = matches.groups['breakpointName'];
   const originalExtension = matches.groups['originalExtension'];
 
+  // order нам понадобится для сортировки массива различных разрешений одной картинки
   const order =
     breakpointName === all
       ? -1
@@ -63,7 +64,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
   // Получаем путь до картинки (outputImagePath = '/build/myImage/mobile.all-4b767a7b.png')
   const outputImagePath = source.replace(/^module.exports = "(.+)";$/, (_, imagePath) => imagePath);
 
-  let webpSrcSet: SrcSet, originalExtensionSrcSet: SrcSet, data: ImageSource[];
+  let webpSrcSet: SrcSet, originalExtensionSrcSet: SrcSet, data: OrderedBreakpointSource;
   // Отключает процессинг картинок, генерируется srcSet только для оригинального типа изображения
   if (options.imgproxy.disable) {
     originalExtensionSrcSet = {
@@ -71,43 +72,39 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
       '2x': outputImagePath,
       '3x': outputImagePath,
     };
-    data = [
-      {
-        breakpointName,
-        breakpointMedia,
-        extension: originalExtension,
-        srcSet: originalExtensionSrcSet,
-      },
-    ];
+    data = {
+      order,
+      breakpointMedia,
+      srcSets: [
+        {
+          extension: originalExtension,
+          srcSet: originalExtensionSrcSet,
+        },
+      ],
+    };
   } else {
     const buildUrlsForAllPixelRatios = getImgproxyUrlBuilder(options.imgproxy);
     webpSrcSet = buildUrlsForAllPixelRatios(outputImagePath, 'webp');
     originalExtensionSrcSet = buildUrlsForAllPixelRatios(outputImagePath, originalExtension);
-    data = [
-      {
-        breakpointName,
-        breakpointMedia,
-        extension: 'webp',
-        srcSet: webpSrcSet,
-      },
-      {
-        breakpointName,
-        breakpointMedia,
-        extension: originalExtension,
-        srcSet: originalExtensionSrcSet,
-      },
-    ];
+    data = {
+      order,
+      breakpointMedia,
+      srcSets: [
+        {
+          extension: 'webp',
+          srcSet: webpSrcSet,
+        },
+        {
+          extension: originalExtension,
+          srcSet: originalExtensionSrcSet,
+        },
+      ],
+    };
     // Добавляем ссылки на картинки через imgproxy в глобальный объект
     imageUrls.push(...Object.values(webpSrcSet), ...Object.values(originalExtensionSrcSet));
   }
 
-  const result: ImgproxyResponsiveLoaderResult = {
-    // order нам понадобиться для сортировки массива различных разрешений одной картинки,
-    // это используется в функции Picture#getImageSources
-    order,
-    data,
-    fallbackSrc: originalExtensionSrcSet['1x'],
-  };
+  const result: OrderedBreakpointSource = data;
 
   return `module.exports = ${JSON.stringify(result)}`;
 };

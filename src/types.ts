@@ -1,26 +1,32 @@
-export type PixelRatio = '1x' | '2x' | '3x';
+export type Dpr = '1x' | '2x' | '3x';
 
 export type SrcSet = {
-  [pixelRatio in PixelRatio]: string;
+  [dpr in Dpr]: string;
 };
 
-export type ImageSource = {
-  breakpointName: string;
-  breakpointMedia: string | undefined;
+export type ExtensionSrcSet = {
   extension: string;
   srcSet: SrcSet;
 };
 
-export type ImgproxyResponsiveLoaderResult = {
-  order: number;
-  data: ImageSource[];
-  fallbackSrc: string;
+export type BreakpointSource = {
+  breakpointMedia: string | undefined;
+  srcSets: ExtensionSrcSet[];
 };
 
-export type Breakpoint = { name: string; minWidth?: number; maxWidth?: number };
+export type OrderedBreakpointSource = {
+  order: number;
+} & BreakpointSource;
 
-export type PictureData = {
-  sources: ImageSource[];
-  fallbackSrcSet: SrcSet;
-  fallbackSrc: string;
+export type BreakpointBoundaries = {
+  minWidth?: number;
+  maxWidth?: number;
+};
+
+export type Breakpoint = {
+  name: string;
+} & BreakpointBoundaries;
+
+type A = {
+  [i in keyof SrcSet]: string;
 };

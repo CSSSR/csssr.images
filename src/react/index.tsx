@@ -1,7 +1,7 @@
 import React from 'react';
-import { ImgproxyResponsiveLoaderResult, PictureData } from '../types';
+import { OrderedBreakpointSource, BreakpointSource } from '../types';
 import RequireContext = __WebpackModuleApi.RequireContext;
-import { getPictureData, getSrcSetString } from '../utils';
+import { getSources, getSrcSetString } from '../utils';
 
 export type PictureCommonProps = {
   alt: string;
@@ -10,25 +10,28 @@ export type PictureCommonProps = {
 };
 
 export type PictureProps = {
-  pictureData: PictureData;
+  sources: BreakpointSource[];
 } & PictureCommonProps;
 
-export const Picture: React.FC<PictureProps> = ({ pictureData, alt, className, testid }) => {
+export const Picture: React.FC<PictureProps> = ({ sources, alt, className, testid }) => {
+  const lastSource = sources[sources.length - 1];
+  const fallbackSrcSet = lastSource.srcSets[lastSource.srcSets.length - 1].srcSet;
+
   return (
     <picture className={className}>
-      {pictureData.sources.map(({ breakpointName, breakpointMedia, extension, srcSet }) => {
-        return (
+      {sources.map(({ breakpointMedia, srcSets }) => {
+        return srcSets.map(({ extension, srcSet }) => (
           <source
-            key={`${breakpointName}_${extension}`}
+            key={`${breakpointMedia}_${extension}`}
             media={breakpointMedia}
             type={`image/${extension}`}
             srcSet={getSrcSetString(srcSet)}
           />
-        );
+        ));
       })}
       <img
-        srcSet={getSrcSetString(pictureData.fallbackSrcSet)}
-        src={pictureData.fallbackSrc}
+        srcSet={getSrcSetString(fallbackSrcSet)}
+        src={fallbackSrcSet['1x']}
         data-testid={testid}
         alt={alt}
       />
@@ -42,7 +45,7 @@ export type PictureSmartProps = {
 
 export const PictureSmart: React.FC<PictureSmartProps> = (props) => {
   const { requireImages, ...rest } = props;
-  const allSources = requireImages.keys().map<ImgproxyResponsiveLoaderResult>(requireImages);
-  const pictureData = getPictureData(allSources);
-  return <Picture pictureData={pictureData} {...rest} />;
+  const allSources = requireImages.keys().map<OrderedBreakpointSource>(requireImages);
+  const sources = getSources(allSources);
+  return <Picture sources={sources} {...rest} />;
 };
