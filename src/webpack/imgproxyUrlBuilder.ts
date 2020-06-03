@@ -25,8 +25,8 @@ export const getImgproxyUrlBuilder = ({
   };
 
   return (imagePath: string, extension: string): SrcSet => ({
-    '1x': buildImgproxyUrl(imagePath, 0.333, extension),
-    '2x': buildImgproxyUrl(imagePath, 0.666, extension),
+    '1x': buildImgproxyUrl(imagePath, 0.3333, extension),
+    '2x': buildImgproxyUrl(imagePath, 0.6666, extension),
     // 0 здесь означает, что не будет никакого изменения размеров картинки
     '3x': buildImgproxyUrl(imagePath, 0, extension),
   });
