@@ -2,9 +2,9 @@ import { ExtensionSrcSet, OrderedBreakpointSource, BreakpointSource, Dpr } from 
 import { getSources } from './index';
 import RequireContext = __WebpackModuleApi.RequireContext;
 
-const breakpointMedia = (media: string | undefined): ((nestedCss: string) => string) => {
+const breakpointMedia = (media: string | null): ((nestedCss: string) => string) => {
   return (nestedCss: string) => {
-    return media === undefined ? nestedCss : `@media ${media} { ${nestedCss} }`;
+    return media === null ? nestedCss : `@media ${media} { ${nestedCss} }`;
   };
 };
 

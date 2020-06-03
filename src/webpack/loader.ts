@@ -58,8 +58,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
     breakpointName === all
       ? -1
       : breakpoints.findIndex((breakpoint) => breakpoint.name === breakpointName);
-  const breakpointMedia =
-    breakpointName === all ? undefined : getBreakpointMedia(breakpoints[order]);
+  const breakpointMedia = breakpointName === all ? null : getBreakpointMedia(breakpoints[order]);
 
   // Получаем путь до картинки (outputImagePath = '/build/myImage/mobile.all-4b767a7b.png')
   const outputImagePath = source.replace(/^module.exports = "(.+)";$/, (_, imagePath) => imagePath);

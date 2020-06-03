@@ -38,7 +38,7 @@ test('backgroundCss all, png only', () => {
   expect(
     backgroundCss('.my-selector', [
       {
-        breakpointMedia: undefined,
+        breakpointMedia: null,
         srcSets: [
           {
             extension: 'png',
@@ -73,7 +73,7 @@ test('backgroundCss all, png and webp', () => {
   expect(
     backgroundCss('.my-selector', [
       {
-        breakpointMedia: undefined,
+        breakpointMedia: null,
         srcSets: [
           {
             extension: 'png',
@@ -126,7 +126,7 @@ test('backgroundCss complex selector', () => {
   expect(
     backgroundCss('#my .complex[selector="my"] > div, .my-selector::after', [
       {
-        breakpointMedia: undefined,
+        breakpointMedia: null,
         srcSets: [
           {
             extension: 'png',

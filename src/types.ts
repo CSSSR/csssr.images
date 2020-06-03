@@ -10,7 +10,7 @@ export type ExtensionSrcSet = {
 };
 
 export type BreakpointSource = {
-  breakpointMedia: string | undefined;
+  breakpointMedia: string | null;
   srcSets: ExtensionSrcSet[];
 };
 

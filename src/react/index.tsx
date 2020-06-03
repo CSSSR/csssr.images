@@ -23,7 +23,7 @@ export const Picture: React.FC<PictureProps> = ({ sources, alt, className, testi
         return srcSets.map(({ extension, srcSet }) => (
           <source
             key={`${breakpointMedia}_${extension}`}
-            media={breakpointMedia}
+            media={breakpointMedia === null ? undefined : breakpointMedia}
             type={`image/${extension}`}
             srcSet={getSrcSetString(srcSet)}
           />
