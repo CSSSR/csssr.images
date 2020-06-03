@@ -26,7 +26,3 @@ export type BreakpointBoundaries = {
 export type Breakpoint = {
   name: string;
 } & BreakpointBoundaries;
-
-type A = {
-  [i in keyof SrcSet]: string;
-};
