@@ -23,11 +23,11 @@ jobs:
 
       - name: Install dependencies
         working-directory: csssr_images
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Build
         working-directory: csssr_images
-        run: yarn run build-example
+        run: npm run build-example
         env:
           HOST: http://master.csssr-images.csssr.cloud
           IMGPROXY_HOST: https://images.csssr.com
