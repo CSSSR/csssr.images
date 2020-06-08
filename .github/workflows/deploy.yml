@@ -1,0 +1,43 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download CSSSR actions
+        uses: actions/checkout@v2
+        with:
+          repository: CSSSR/actions
+          token: ${{ secrets.DOWNLOAD_ACTIONS_TOKEN }}
+          path: actions
+
+      - uses: actions/checkout@v2
+        with:
+          path: csssr_images
+
+      - name: Install dependencies
+        working-directory: csssr_images
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        working-directory: csssr_images
+        run: yarn run build-example
+        env:
+          HOST: http://master.csssr-images.csssr.cloud
+          IMGPROXY_HOST: https://images.csssr.com
+
+      - name: Deploy
+        uses: ./actions/deploy-static-site/v1beta1
+        with:
+          auth: ${{ secrets.CSSSR_AUTH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          site-type: mpa
+          project-id: csssr-images
+          files: ./csssr_images/example
+          no-previous-files: "true"

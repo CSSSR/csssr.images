@@ -25,7 +25,7 @@ export type LoaderOptions = {
 // для каждой картинки получится массив с двумя значениями –
 // srcset'ы для webp и srcset для оригинального расширения изображения
 export const loader = function (this: webpack.loader.LoaderContext, source: string): string {
-  const options = loaderUtils.getOptions(this) as LoaderOptions;
+  const options = loaderUtils.getOptions(this) as unknown as LoaderOptions;
 
   validateOptions(schema, options, { name: 'Imgproxy responsive loader', baseDataPath: 'options' });
 

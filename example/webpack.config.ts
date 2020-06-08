@@ -1,7 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
 import { Plugin } from '../src/webpack';
-import { breakpoints } from './breakpoints';
 
 const config: webpack.Configuration = {
   mode: 'production',
@@ -28,11 +27,25 @@ const config: webpack.Configuration = {
           {
             loader: path.resolve(__dirname, '../src/index.ts'),
             options: {
-              breakpoints,
+              breakpoints: [
+                {
+                  name: 'mobile',
+                  maxWidth: 767,
+                },
+                {
+                  name: 'tablet',
+                  minWidth: 768,
+                  maxWidth: 1279,
+                },
+                {
+                  name: 'desktop',
+                  minWidth: 1280,
+                },
+              ],
               imgproxy: {
                 disable: false,
-                imagesHost: 'http://192.168.1.134:8081',
-                host: 'http://localhost:8080',
+                imagesHost: process.env.HOST || 'http://192.168.1.134:8081',
+                host: process.env.IMGPROXY_HOST || 'http://localhost:8080',
               },
             },
           },
