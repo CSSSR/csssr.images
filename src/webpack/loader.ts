@@ -61,7 +61,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
   const breakpointMedia = breakpointName === all ? null : getBreakpointMedia(breakpoints[order]);
 
   // Получаем путь до картинки (outputImagePath = '/build/myImage/mobile.all-4b767a7b.png')
-  const outputImagePath = source.replace(/^module.exports = "(.+)";$/, (_, imagePath) => imagePath);
+  const outputImagePath = source.replace(/^module.exports = (__webpack_public_path__ \+ )?"(.+)";$/, (_, imagePath) => imagePath);
 
   let webpSrcSet: SrcSet, originalExtensionSrcSet: SrcSet, data: OrderedBreakpointSource;
   // Отключает процессинг картинок, генерируется srcSet только для оригинального типа изображения
