@@ -1,7 +1,3 @@
-[![npm][npm]][npm-url]
-[![node][node]][node-url]
-[![deps][deps]][deps-url]
-
 # csssr.images
 
 An opinionated library for handling responsive images with help of [imgrpoxy](https://imgproxy.net/).
