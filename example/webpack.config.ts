@@ -1,5 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
+const ip = require('ip')
 import { Plugin } from '../src/webpack';
 
 const config: webpack.Configuration = {
@@ -23,42 +24,93 @@ const config: webpack.Configuration = {
       },
       {
         test: /\.(jpe?g|png|gif)$/,
-        use: [
+        oneOf: [
           {
-            loader: path.resolve(__dirname, '../src/index.ts'),
-            options: {
-              breakpoints: [
-                {
-                  name: 'mobile',
-                  maxWidth: 767,
+            resourceQuery: /dontresize/,
+            // TODO reuse
+            use: [
+              {
+                loader: path.resolve(__dirname, '../src/index.ts'),
+                options: {
+                  breakpoints: [
+                    {
+                      name: 'mobile',
+                      maxWidth: 767,
+                    },
+                    {
+                      name: 'tablet',
+                      minWidth: 768,
+                      maxWidth: 1279,
+                    },
+                    {
+                      name: 'desktop',
+                      minWidth: 1280,
+                    },
+                  ],
+                  imgproxy: {
+                    disable: false,
+                    imagesHost: process.env.HOST || `http://${ip.address()}:8081`,
+                    host: process.env.IMGPROXY_HOST || 'http://localhost:8080',
+                  },
+                  // TODO использовать originalPixelRatio
+                  shouldResize: false,
+                  // originalPixelRatio: '1x',
                 },
-                {
-                  name: 'tablet',
-                  minWidth: 768,
-                  maxWidth: 1279,
-                },
-                {
-                  name: 'desktop',
-                  minWidth: 1280,
-                },
-              ],
-              imgproxy: {
-                disable: false,
-                imagesHost: process.env.HOST || 'http://192.168.1.134:8081',
-                host: process.env.IMGPROXY_HOST || 'http://localhost:8080',
               },
-            },
+              {
+                loader: 'file-loader',
+                options: {
+                  publicPath: '/build',
+                  name:
+                    process.env.NODE_ENV === 'development'
+                      ? '[path][name].[ext]'
+                      : '[path][name]-[hash:8].[ext]',
+                  esModule: false,
+                },
+              },
+            ],
           },
           {
-            loader: 'file-loader',
-            options: {
-              publicPath: '/build',
-              name:
-                process.env.NODE_ENV === 'development'
-                  ? '[path][name].[ext]'
-                  : '[path][name]-[hash:8].[ext]',
-              esModule: false,
-            },
+            use: [
+              {
+                loader: path.resolve(__dirname, '../src/index.ts'),
+                options: {
+                  breakpoints: [
+                    {
+                      name: 'mobile',
+                      maxWidth: 767,
+                    },
+                    {
+                      name: 'tablet',
+                      minWidth: 768,
+                      maxWidth: 1279,
+                    },
+                    {
+                      name: 'desktop',
+                      minWidth: 1280,
+                    },
+                  ],
+                  imgproxy: {
+                    disable: false,
+                    imagesHost: process.env.HOST || `http://${ip.address()}:8081`,
+                    host: process.env.IMGPROXY_HOST || 'http://localhost:8080',
+                  },
+                  shouldResize: true,
+                  // originalPixelRatio: '3x',
+                },
+              },
+              {
+                loader: 'file-loader',
+                options: {
+                  publicPath: '/build',
+                  name:
+                    process.env.NODE_ENV === 'development'
+                      ? '[path][name].[ext]'
+                      : '[path][name]-[hash:8].[ext]',
+                  esModule: false,
+                },
+              },
+            ]
           },
         ],
       },

@@ -19,6 +19,7 @@ export type LoaderOptions = {
     imagesHost: string;
     host: string;
   };
+  shouldResize: boolean;
 };
 
 // Каждый импорт картинки проходит через этот лоадер и на выходе
@@ -28,6 +29,10 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
   const options = loaderUtils.getOptions(this) as unknown as LoaderOptions;
 
   validateOptions(schema, options, { name: 'Imgproxy responsive loader', baseDataPath: 'options' });
+
+  // TODO
+  // Подготовить здесь массив с pixelRatios [1x 2x 3x] [1x 2x] [1x]
+  // Я не уверен в каком порядке должны быть элементы массива
 
   const breakpoints: Breakpoint[] = options.breakpoints;
 
@@ -66,6 +71,8 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
   let webpSrcSet: SrcSet, originalExtensionSrcSet: SrcSet, data: OrderedBreakpointSource;
   // Отключает процессинг картинок, генерируется srcSet только для оригинального типа изображения
   if (options.imgproxy.disable) {
+    // TODO пока не смотрим disable
+
     originalExtensionSrcSet = {
       '1x': outputImagePath,
       '2x': outputImagePath,
@@ -82,9 +89,19 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
       ],
     };
   } else {
-    const buildUrlsForAllPixelRatios = getImgproxyUrlBuilder(options.imgproxy);
-    webpSrcSet = buildUrlsForAllPixelRatios(outputImagePath, 'webp');
-    originalExtensionSrcSet = buildUrlsForAllPixelRatios(outputImagePath, originalExtension);
+    const buildUrlsForPixelRatios = getImgproxyUrlBuilder(options.imgproxy);
+    console.log(options.shouldResize)
+    if (options.shouldResize) {
+      // TODO убрать хардкод, вынести в опции лоадера?
+      // originalRatio: 3x -> 3x 2x 1x
+      // originalRatio: 2x -> 2x 1x
+      // originalRatio: 1x -> 1x
+      webpSrcSet = buildUrlsForPixelRatios(['1x', '2x', '3x'], outputImagePath, 'webp');
+      originalExtensionSrcSet = buildUrlsForPixelRatios(['1x', '2x', '3x'], outputImagePath, originalExtension);
+    } else {
+      webpSrcSet = buildUrlsForPixelRatios(['1x'], outputImagePath, 'webp');
+      originalExtensionSrcSet = buildUrlsForPixelRatios(['1x'], outputImagePath, originalExtension);
+    }
     data = {
       order,
       breakpointMedia,
@@ -100,7 +117,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
       ],
     };
     // Добавляем ссылки на картинки через imgproxy в глобальный объект
-    imageUrls.push(...Object.values(webpSrcSet), ...Object.values(originalExtensionSrcSet));
+    imageUrls.push(...(Object.values(webpSrcSet) as string[]), ...(Object.values(originalExtensionSrcSet) as string[]));
   }
 
   const result: OrderedBreakpointSource = data;

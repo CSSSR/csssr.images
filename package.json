@@ -38,6 +38,7 @@
     "eslint-plugin-react": "^7.20.0",
     "file-loader": "^6.0.0",
     "http-server": "^0.12.3",
+    "ip": "^1.1.5",
     "jest": "^26.0.1",
     "loader-utils": "^2.0.0",
     "prettier": "^2.0.5",

@@ -48,6 +48,9 @@ export const schema: JSONSchema7 = {
         },
       ],
     },
+    shouldResize: {
+      type: 'boolean',
+    }
   },
   required: ['breakpoints', 'imgproxy'],
   additionalProperties: false,
