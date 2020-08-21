@@ -52,9 +52,7 @@ const config: webpack.Configuration = {
                     imagesHost: process.env.HOST || `http://${ip.address()}:8081`,
                     host: process.env.IMGPROXY_HOST || 'http://localhost:8080',
                   },
-                  // TODO использовать originalPixelRatio
-                  shouldResize: false,
-                  // originalPixelRatio: '1x',
+                  originalPixelRatio: '1x',
                 },
               },
               {
@@ -95,8 +93,7 @@ const config: webpack.Configuration = {
                     imagesHost: process.env.HOST || `http://${ip.address()}:8081`,
                     host: process.env.IMGPROXY_HOST || 'http://localhost:8080',
                   },
-                  shouldResize: true,
-                  // originalPixelRatio: '3x',
+                  originalPixelRatio: '3x',
                 },
               },
               {

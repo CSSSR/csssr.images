@@ -48,8 +48,8 @@ export const schema: JSONSchema7 = {
         },
       ],
     },
-    shouldResize: {
-      type: 'boolean',
+    originalPixelRatio: {
+      type: 'string'
     }
   },
   required: ['breakpoints', 'imgproxy'],

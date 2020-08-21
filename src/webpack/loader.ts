@@ -3,10 +3,10 @@ import path from 'path';
 import loaderUtils from 'loader-utils';
 import validateOptions from 'schema-utils';
 import { getImgproxyUrlBuilder } from './imgproxyUrlBuilder';
-import { Breakpoint, OrderedBreakpointSource, SrcSet } from '../types';
+import { Breakpoint, OrderedBreakpointSource, SrcSet, Dpr } from '../types';
 import { imageUrls } from './plugin';
 import { schema } from './loaderOptionsSchema';
-import { getBreakpointMedia } from '../utils';
+import { getBreakpointMedia, getPixelRations } from '../utils';
 
 // Такое имя используется, если нужна одна картинка для всех разрешений
 // В таком случаем не будут сгенерированы медиа выражения для разных breakpoint'ов
@@ -19,7 +19,7 @@ export type LoaderOptions = {
     imagesHost: string;
     host: string;
   };
-  shouldResize: boolean;
+  originalPixelRatio: Dpr;
 };
 
 // Каждый импорт картинки проходит через этот лоадер и на выходе
@@ -30,12 +30,8 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
 
   validateOptions(schema, options, { name: 'Imgproxy responsive loader', baseDataPath: 'options' });
 
-  // TODO
-  // Подготовить здесь массив с pixelRatios [1x 2x 3x] [1x 2x] [1x]
-  // Я не уверен в каком порядке должны быть элементы массива
-
+  const pixelRations: Dpr[] = getPixelRations(options.originalPixelRatio)
   const breakpoints: Breakpoint[] = options.breakpoints;
-
   // Такой результат приходит от file-loader 'module.exports = "/build/myImage/mobile.all-4b767a7b.png";'
   // Получаем оригинальное имя файла изображения (originalImageFileName = mobile.all.png)
   const originalImageFileName = path.relative(this.context, this.resourcePath);
@@ -90,18 +86,9 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
     };
   } else {
     const buildUrlsForPixelRatios = getImgproxyUrlBuilder(options.imgproxy);
-    console.log(options.shouldResize)
-    if (options.shouldResize) {
-      // TODO убрать хардкод, вынести в опции лоадера?
-      // originalRatio: 3x -> 3x 2x 1x
-      // originalRatio: 2x -> 2x 1x
-      // originalRatio: 1x -> 1x
-      webpSrcSet = buildUrlsForPixelRatios(['1x', '2x', '3x'], outputImagePath, 'webp');
-      originalExtensionSrcSet = buildUrlsForPixelRatios(['1x', '2x', '3x'], outputImagePath, originalExtension);
-    } else {
-      webpSrcSet = buildUrlsForPixelRatios(['1x'], outputImagePath, 'webp');
-      originalExtensionSrcSet = buildUrlsForPixelRatios(['1x'], outputImagePath, originalExtension);
-    }
+    webpSrcSet = buildUrlsForPixelRatios(pixelRations, outputImagePath, 'webp');
+    originalExtensionSrcSet = buildUrlsForPixelRatios(pixelRations, outputImagePath, originalExtension);
+
     data = {
       order,
       breakpointMedia,

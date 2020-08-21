@@ -1,8 +1,7 @@
 import { BreakpointSource } from '../types';
 
-export const getOriginal = (source: BreakpointSource): string => {
-  // TODO здесь использовалось 3x изображение
-  // Надо использовать самое большое по значению
-  // или может быть сохранять где-то original раньше
-  return source.srcSets[source.srcSets.length - 1].srcSet['1x']
+export const getOriginal = (source: BreakpointSource): string | undefined => {
+  const srcSet = source.srcSets[source.srcSets.length - 1].srcSet;
+
+  return srcSet['3x'] || srcSet['2x'] || srcSet['1x']
 }

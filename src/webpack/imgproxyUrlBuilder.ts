@@ -1,5 +1,6 @@
 import Imgproxy from 'imgproxy';
 import { Dpr, SrcSet } from '../types'
+import { getCompressionRatio } from '../utils'
 
 type ImgproxyUrlBuilderConfig = {
   imagesHost: string;
@@ -25,20 +26,11 @@ export const getImgproxyUrlBuilder = ({
   };
 
   return (pixelRatios: Dpr[], imagePath: string, extension: string): SrcSet => {
-    // TODO выводить коэффициенты сжатия (изменения размера) из количества элементов массива
-    // или из значений массива
-    // [1x, 2x] -> {1x: 0.5, 2x: 1}
+    const compressionsRatio = getCompressionRatio(pixelRatios)
 
-    if (pixelRatios.length === 1) {
-      return {
-        '1x': buildImgproxyUrl(imagePath, 1, extension),
-      }
-    }
-    return {
-      '1x': buildImgproxyUrl(imagePath, 0.3333, extension),
-      '2x': buildImgproxyUrl(imagePath, 0.6666, extension),
-      // 0 здесь означает, что не будет никакого изменения размеров картинки
-      '3x': buildImgproxyUrl(imagePath, 0, extension),
-    }
-  };
+    return pixelRatios.reduce((acc:SrcSet, item: Dpr) => {
+      acc[item] = buildImgproxyUrl(imagePath, compressionsRatio[item] || 0, extension)
+      return acc
+    },{})
+  }
 };

@@ -1,20 +1,11 @@
 export type Dpr = '1x' | '2x' | '3x';
 
-// TODO поправить этот тип
-// export type SrcSet = {
-//   '1x': string;
-// } | {
-//   '1x': string;
-//   '2x': string;
-// } | {
-//   '1x': string;
-//   '2x': string;
-//   '3x': string;
-// };
+export type CompressionRatio = {
+  [dpr in Dpr]?: number;
+}
+
 export type SrcSet = {
-  '1x': string;
-  '2x'?: string;
-  '3x'?: string;
+  [dpr in Dpr]?: string;
 };
 
 export type ExtensionSrcSet = {
