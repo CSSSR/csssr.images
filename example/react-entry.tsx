@@ -53,7 +53,7 @@ ReactDOM.render(
 
     <h3>Image without resize</h3>
 
-    <div className=".image-without-resize" style={{ width: '100%', height: '100%' }}>
+    <div className="image-without-resize" style={{ width: '100%', height: '100%' }}>
       Image without resize on background
     </div>
     <style>{backgroundCssSmart('.image-without-resize', imageWithoutResize)}</style>
