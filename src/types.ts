@@ -1,15 +1,15 @@
 export type Dpr = '1x' | '2x' | '3x';
 
 export type CompressionRatio = {
-  "1x": number;
-  "2x"?: number;
-  "3x"?: number;
-}
+  '1x': number;
+  '2x'?: number;
+  '3x'?: number;
+};
 
 export type SrcSet = {
-  "1x": string;
-  "2x"?: string;
-  "3x"?: string;
+  '1x': string;
+  '2x'?: string;
+  '3x'?: string;
 };
 
 export type ExtensionSrcSet = {

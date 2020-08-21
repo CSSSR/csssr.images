@@ -49,8 +49,8 @@ export const schema: JSONSchema7 = {
       ],
     },
     originalPixelRatio: {
-      type: 'string'
-    }
+      type: 'string',
+    },
   },
   required: ['breakpoints', 'imgproxy'],
   additionalProperties: false,
