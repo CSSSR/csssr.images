@@ -28,9 +28,9 @@ export const getImgproxyUrlBuilder = ({
   return (pixelRatios: Dpr[], imagePath: string, extension: string): SrcSet => {
     const compressionsRatio = getCompressionRatio(pixelRatios)
 
-    return pixelRatios.reduce((acc:SrcSet, item: Dpr) => {
+    return pixelRatios.reduce((acc, item) => {
       acc[item] = buildImgproxyUrl(imagePath, compressionsRatio[item] || 0, extension)
       return acc
-    },{})
+    }, {} as SrcSet)
   }
 };
