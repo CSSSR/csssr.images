@@ -32,10 +32,7 @@ ReactDOM.render(
     <PictureSmart requireImages={differentBreakpoints} alt="Image with different breakpoints" />
 
     <h3>Image without resize</h3>
-    <PictureSmart
-      requireImages={imageWithoutResize}
-      alt="Image without resize"
-    />
+    <PictureSmart requireImages={imageWithoutResize} alt="Image without resize" />
 
     <h2>As background css</h2>
 

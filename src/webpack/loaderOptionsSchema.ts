@@ -50,9 +50,9 @@ export const schema: JSONSchema7 = {
     },
     originalPixelRatio: {
       type: 'string',
-      pattern: "^(1x|2x|3x)$",
+      pattern: '^(1x|2x|3x)$',
     },
   },
-  required: ['breakpoints', 'imgproxy','originalPixelRatio'],
+  required: ['breakpoints', 'imgproxy', 'originalPixelRatio'],
   additionalProperties: false,
 };

@@ -76,7 +76,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
       srcSets: [
         {
           extension: originalExtension,
-          srcSet: getOriginalExtensionSrcSet(pixelRatios,outputImagePath),
+          srcSet: getOriginalExtensionSrcSet(pixelRatios, outputImagePath),
         },
       ],
     };
