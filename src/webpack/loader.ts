@@ -6,7 +6,7 @@ import { getImgproxyUrlBuilder } from './imgproxyUrlBuilder';
 import { Breakpoint, OrderedBreakpointSource, SrcSet, Dpr } from '../types';
 import { imageUrls } from './plugin';
 import { schema } from './loaderOptionsSchema';
-import { getBreakpointMedia, getPixelRations } from '../utils';
+import { getBreakpointMedia, getPixelRations, getOriginalExtensionSrcSet } from '../utils';
 
 // Такое имя используется, если нужна одна картинка для всех разрешений
 // В таком случаем не будут сгенерированы медиа выражения для разных breakpoint'ов
@@ -30,7 +30,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
 
   validateOptions(schema, options, { name: 'Imgproxy responsive loader', baseDataPath: 'options' });
 
-  const pixelRations: Dpr[] = getPixelRations(options.originalPixelRatio);
+  const pixelRatios: Dpr[] = getPixelRations(options.originalPixelRatio);
   const breakpoints: Breakpoint[] = options.breakpoints;
   // Такой результат приходит от file-loader 'module.exports = "/build/myImage/mobile.all-4b767a7b.png";'
   // Получаем оригинальное имя файла изображения (originalImageFileName = mobile.all.png)
@@ -70,28 +70,21 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
   let webpSrcSet: SrcSet, originalExtensionSrcSet: SrcSet, data: OrderedBreakpointSource;
   // Отключает процессинг картинок, генерируется srcSet только для оригинального типа изображения
   if (options.imgproxy.disable) {
-    // TODO пока не смотрим disable
-
-    originalExtensionSrcSet = {
-      '1x': outputImagePath,
-      '2x': outputImagePath,
-      '3x': outputImagePath,
-    };
     data = {
       order,
       breakpointMedia,
       srcSets: [
         {
           extension: originalExtension,
-          srcSet: originalExtensionSrcSet,
+          srcSet: getOriginalExtensionSrcSet(pixelRatios,outputImagePath),
         },
       ],
     };
   } else {
     const buildUrlsForPixelRatios = getImgproxyUrlBuilder(options.imgproxy);
-    webpSrcSet = buildUrlsForPixelRatios(pixelRations, outputImagePath, 'webp');
+    webpSrcSet = buildUrlsForPixelRatios(pixelRatios, outputImagePath, 'webp');
     originalExtensionSrcSet = buildUrlsForPixelRatios(
-      pixelRations,
+      pixelRatios,
       outputImagePath,
       originalExtension,
     );

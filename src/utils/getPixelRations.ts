@@ -8,7 +8,5 @@ export const getPixelRations = (originalPixelRatio: Dpr): Dpr[] => {
       return ['1x', '2x'];
     case '3x':
       return ['1x', '2x', '3x'];
-    default:
-      return ['1x'];
   }
 };
