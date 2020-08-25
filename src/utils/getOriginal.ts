@@ -1,4 +1,7 @@
 import { BreakpointSource } from '../types';
 
-export const getOriginal = (source: BreakpointSource): string =>
-  source.srcSets[source.srcSets.length - 1].srcSet['3x'];
+export const getOriginal = (source: BreakpointSource): string => {
+  const srcSet = source.srcSets[source.srcSets.length - 1].srcSet;
+
+  return srcSet['3x'] || srcSet['2x'] || srcSet['1x'];
+};

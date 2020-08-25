@@ -1,6 +1,52 @@
 import path from 'path';
 import webpack from 'webpack';
+import ip from 'ip';
 import { Plugin } from '../src/webpack';
+import { Dpr } from '../src/types';
+
+const handleImagesForOriginalPixelRatio = (originalPixelRatio: Dpr) => {
+  return {
+    use: [
+      {
+        loader: path.resolve(__dirname, '../src/index.ts'),
+        options: {
+          breakpoints: [
+            {
+              name: 'mobile',
+              maxWidth: 767,
+            },
+            {
+              name: 'tablet',
+              minWidth: 768,
+              maxWidth: 1279,
+            },
+            {
+              name: 'desktop',
+              minWidth: 1280,
+            },
+          ],
+          imgproxy: {
+            disable: false,
+            imagesHost: process.env.HOST || `http://${ip.address()}:8081`,
+            host: process.env.IMGPROXY_HOST || 'http://localhost:8080',
+          },
+          originalPixelRatio,
+        },
+      },
+      {
+        loader: 'file-loader',
+        options: {
+          publicPath: '/build',
+          name:
+            process.env.NODE_ENV === 'development'
+              ? '[path][name].[ext]'
+              : '[path][name]-[hash:8].[ext]',
+          esModule: false,
+        },
+      },
+    ],
+  };
+};
 
 const config: webpack.Configuration = {
   mode: 'production',
@@ -23,42 +69,13 @@ const config: webpack.Configuration = {
       },
       {
         test: /\.(jpe?g|png|gif)$/,
-        use: [
+        oneOf: [
           {
-            loader: path.resolve(__dirname, '../src/index.ts'),
-            options: {
-              breakpoints: [
-                {
-                  name: 'mobile',
-                  maxWidth: 767,
-                },
-                {
-                  name: 'tablet',
-                  minWidth: 768,
-                  maxWidth: 1279,
-                },
-                {
-                  name: 'desktop',
-                  minWidth: 1280,
-                },
-              ],
-              imgproxy: {
-                disable: false,
-                imagesHost: process.env.HOST || 'http://192.168.1.134:8081',
-                host: process.env.IMGPROXY_HOST || 'http://localhost:8080',
-              },
-            },
+            resourceQuery: /dontresize/,
+            ...handleImagesForOriginalPixelRatio('1x'),
           },
           {
-            loader: 'file-loader',
-            options: {
-              publicPath: '/build',
-              name:
-                process.env.NODE_ENV === 'development'
-                  ? '[path][name].[ext]'
-                  : '[path][name]-[hash:8].[ext]',
-              esModule: false,
-            },
+            ...handleImagesForOriginalPixelRatio('3x'),
           },
         ],
       },

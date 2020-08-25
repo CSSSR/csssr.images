@@ -397,3 +397,34 @@ test('backgroundCss multiple breakpoints, png and webp', () => {
   }
 }`);
 });
+
+test('backgroundCss all breakpoints, png and webp, one pixel ratio', () => {
+  expect(
+    backgroundCss('.my-selector', [
+      {
+        breakpointMedia: null,
+        srcSets: [
+          {
+            extension: 'png',
+            srcSet: {
+              '1x': '/mobile.all.1x.png',
+            },
+          },
+          {
+            extension: 'webp',
+            srcSet: {
+              '1x': '/mobile.all.1x.webp',
+            },
+          },
+        ],
+      },
+    ]),
+  ).toBeSameCss(`
+  .my-selector {
+    background-image: url(/mobile.all.1x.png);
+  }
+  html.webp .my-selector {
+    background-image: url(/mobile.all.1x.webp);
+  }
+`);
+});

@@ -1,17 +1,22 @@
 import Imgproxy from 'imgproxy';
-import { SrcSet } from '../types';
+import { Dpr, SrcSet } from '../types';
+import { getCompressionRatio } from '../utils';
 
 type ImgproxyUrlBuilderConfig = {
   imagesHost: string;
   host: string;
 };
 
-export type BuildUrlsForAllPixelRatios = (imagePath: string, extension: string) => SrcSet;
+export type BuildUrlsForPixelRatios = (
+  pixelRatios: Dpr[],
+  imagePath: string,
+  extension: string,
+) => SrcSet;
 
 export const getImgproxyUrlBuilder = ({
   imagesHost,
   host,
-}: ImgproxyUrlBuilderConfig): BuildUrlsForAllPixelRatios => {
+}: ImgproxyUrlBuilderConfig): BuildUrlsForPixelRatios => {
   const imgproxy = new Imgproxy({
     baseUrl: host,
     encode: false,
@@ -24,10 +29,15 @@ export const getImgproxyUrlBuilder = ({
       .generateUrl(imagesHost + imgPath, extension);
   };
 
-  return (imagePath: string, extension: string): SrcSet => ({
-    '1x': buildImgproxyUrl(imagePath, 0.3333, extension),
-    '2x': buildImgproxyUrl(imagePath, 0.6666, extension),
-    // 0 здесь означает, что не будет никакого изменения размеров картинки
-    '3x': buildImgproxyUrl(imagePath, 0, extension),
-  });
+  return (pixelRatios: Dpr[], imagePath: string, extension: string): SrcSet => {
+    const compressionsRatio = getCompressionRatio(pixelRatios);
+
+    return pixelRatios.reduce((acc, item) => {
+      const dprResize = compressionsRatio[item];
+      if (dprResize !== undefined) {
+        acc[item] = buildImgproxyUrl(imagePath, dprResize, extension);
+      }
+      return acc;
+    }, {} as SrcSet);
+  };
 };

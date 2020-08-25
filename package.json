@@ -38,7 +38,8 @@
     "eslint-plugin-react": "^7.20.3",
     "file-loader": "^6.0.0",
     "http-server": "^0.12.3",
-    "jest": "^26.1.0",
+    "ip": "^1.1.5",
+    "jest": "^26.0.1",
     "loader-utils": "^2.0.0",
     "prettier": "^2.0.5",
     "ts-jest": "^26.1.3",
@@ -49,6 +50,7 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "@types/ip": "^1.1.0",
     "imgproxy": "^0.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
