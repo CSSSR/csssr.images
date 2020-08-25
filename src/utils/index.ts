@@ -3,6 +3,5 @@ export { getBreakpointMedia } from './getBreakpointMedia';
 export { getSrcSetString } from './getSrcSetString';
 export { getSources } from './getSources';
 export { getOriginal } from './getOriginal';
-export { getPixelRations } from './getPixelRations';
+export { getPixelRatios } from './getPixelRatios';
 export { getCompressionRatio } from './getCompressionRatio';
-export { getOriginalExtensionSrcSet } from './getOriginalExtensionSrcSet';

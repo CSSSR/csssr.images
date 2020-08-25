@@ -1,6 +1,6 @@
 import { Dpr } from '../types';
 
-export const getPixelRations = (originalPixelRatio: Dpr): Dpr[] => {
+export const getPixelRatios = (originalPixelRatio: Dpr): Dpr[] => {
   switch (originalPixelRatio) {
     case '1x':
       return ['1x'];

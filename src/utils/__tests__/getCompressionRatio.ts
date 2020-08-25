@@ -10,8 +10,8 @@ test('Pixel ratios 1x, 2x', () => {
 
 test('Pixel ratios 1x, 2x, 3x', () => {
   expect(getCompressionRatio(['1x', '2x', '3x'])).toStrictEqual({
-    '1x': 0.3333333333333333,
-    '2x': 0.6666666666666666,
+    '1x': 0.33333,
+    '2x': 0.66667,
     '3x': 0,
   });
 });

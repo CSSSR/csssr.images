@@ -9,7 +9,7 @@ export const getCompressionRatio = (pixelRatios: Dpr[]): CompressionRatio => {
       return acc;
     }
 
-    acc[item] = (index + 1) / length;
+    acc[item] = Number(((index + 1) / length).toFixed(5));
     return acc;
   }, {} as CompressionRatio);
 };
