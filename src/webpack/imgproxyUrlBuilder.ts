@@ -34,7 +34,7 @@ export const getImgproxyUrlBuilder = ({
 
     return pixelRatios.reduce((acc, item) => {
       const dprResize = compressionsRatio[item];
-      if (dprResize) {
+      if (dprResize !== undefined) {
         acc[item] = buildImgproxyUrl(imagePath, dprResize, extension);
       }
       return acc;
