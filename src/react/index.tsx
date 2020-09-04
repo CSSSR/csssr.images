@@ -6,14 +6,14 @@ import { getSources, getSrcSetString } from '../utils';
 export type PictureCommonProps = {
   alt: string;
   className?: string;
-  testid?: string;
+  testId?: string;
 };
 
 export type PictureProps = {
   sources: BreakpointSource[];
 } & PictureCommonProps;
 
-export const Picture: React.FC<PictureProps> = ({ sources, alt, className, testid }) => {
+export const Picture: React.FC<PictureProps> = ({ sources, alt, className, testId }) => {
   const lastSource = sources[sources.length - 1];
   const fallbackSrcSet = lastSource.srcSets[lastSource.srcSets.length - 1].srcSet;
 
@@ -32,7 +32,7 @@ export const Picture: React.FC<PictureProps> = ({ sources, alt, className, testi
       <img
         srcSet={getSrcSetString(fallbackSrcSet)}
         src={fallbackSrcSet['1x']}
-        data-testid={testid}
+        data-testid={testId}
         alt={alt}
       />
     </picture>
