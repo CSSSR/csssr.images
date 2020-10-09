@@ -7,13 +7,14 @@ export type PictureCommonProps = {
   alt: string;
   className?: string;
   testId?: string;
+  loading?: 'eager' | 'lazy';
 };
 
 export type PictureProps = {
   sources: BreakpointSource[];
 } & PictureCommonProps;
 
-export const Picture: React.FC<PictureProps> = ({ sources, alt, className, testId }) => {
+export const Picture: React.FC<PictureProps> = ({ sources, alt, className, testId, loading }) => {
   const lastSource = sources[sources.length - 1];
   const fallbackSrcSet = lastSource.srcSets[lastSource.srcSets.length - 1].srcSet;
 
@@ -34,6 +35,7 @@ export const Picture: React.FC<PictureProps> = ({ sources, alt, className, testI
         src={fallbackSrcSet['1x']}
         data-testid={testId}
         alt={alt}
+        loading={loading}
       />
     </picture>
   );
