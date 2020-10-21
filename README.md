@@ -1,6 +1,6 @@
 # csssr.images
 
-An opinionated library for handling responsive images with help of [imgrpoxy](https://imgproxy.net/).
+An opinionated library for handling responsive images with help of [imgproxy](https://imgproxy.net/).
 
 It takes your images, generates optimized 1x, 2x and 3x versions of them and output them as <picture/>'s srcSet or background css.
 
