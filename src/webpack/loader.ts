@@ -1,7 +1,7 @@
 import webpack from 'webpack';
 import path from 'path';
 import loaderUtils from 'loader-utils';
-import validateOptions from 'schema-utils';
+import { validate } from 'schema-utils';
 import { getImgproxyUrlBuilder } from './imgproxyUrlBuilder';
 import { Breakpoint, OrderedBreakpointSource, SrcSet, Dpr } from '../types';
 import { imageUrls } from './plugin';
@@ -28,7 +28,7 @@ export type LoaderOptions = {
 export const loader = function (this: webpack.loader.LoaderContext, source: string): string {
   const options = (loaderUtils.getOptions(this) as unknown) as LoaderOptions;
 
-  validateOptions(schema, options, { name: 'Imgproxy responsive loader', baseDataPath: 'options' });
+  validate(schema, options, { name: 'Imgproxy responsive loader', baseDataPath: 'options' });
 
   const pixelRatios: Dpr[] = getPixelRatios(options.originalPixelRatio);
   const breakpoints: Breakpoint[] = options.breakpoints;
