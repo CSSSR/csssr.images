@@ -46,7 +46,7 @@
     "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.11",
     "ts-node": "^8.10.2",
-    "webpack": "^5.9.0",
+    "webpack": "^5.26.3",
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {
