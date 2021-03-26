@@ -6,10 +6,11 @@ import { getImgproxyUrlBuilder } from './imgproxyUrlBuilder';
 import { Breakpoint, OrderedBreakpointSource, SrcSet, Dpr } from '../types';
 import { imageUrls } from './plugin';
 import { schema } from './loaderOptionsSchema';
-import { getBreakpointMedia, getPixelRatios } from '../utils';
+import { getBreakpointMedia } from '../utils/getBreakpointMedia';
+import { getPixelRatios } from '../utils/getPixelRatios';
 
-// Такое имя используется, если нужна одна картинка для всех разрешений
-// В таком случаем не будут сгенерированы медиа выражения для разных breakpoint'ов
+// This name is used if you want one picture for all resolutions
+// In this case, media expressions for different breakpoints will not be generated
 const all = 'all';
 
 export type LoaderOptions = {
@@ -22,9 +23,9 @@ export type LoaderOptions = {
   originalPixelRatio: Dpr;
 };
 
-// Каждый импорт картинки проходит через этот лоадер и на выходе
-// для каждой картинки получится массив с двумя значениями –
-// srcset'ы для webp и srcset для оригинального расширения изображения
+// Each import of an image passes through this loader and in the output
+// for each picture we get an array with two values
+// srcset for webp and srcset for the original image extension
 export const loader = function (this: webpack.loader.LoaderContext, source: string): string {
   const options = (loaderUtils.getOptions(this) as unknown) as LoaderOptions;
 
@@ -32,8 +33,8 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
 
   const pixelRatios: Dpr[] = getPixelRatios(options.originalPixelRatio);
   const breakpoints: Breakpoint[] = options.breakpoints;
-  // Такой результат приходит от file-loader 'module.exports = "/build/myImage/mobile.all-4b767a7b.png";'
-  // Получаем оригинальное имя файла изображения (originalImageFileName = mobile.all.png)
+  // This is the result of the file-loader 'module.exports = "/build/myImage/mobile.all-4b767a7b.png";'
+  // Get the original name of the image file (originalImageFileName = mobile.all.png)
   const originalImageFileName = path.relative(this.context, this.resourcePath);
 
   const escapedBreakpointsNames = breakpoints.map((item) => item.name.replace('.', '\\.'));
@@ -47,28 +48,28 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
 
   if (!matches || !matches.groups) {
     throw new Error(
-      `Невалидное имя картинки ${originalImageFileName}. Директория с картинками должна содержать только картинки с именами соответствующими брейкпоинтам. Поддерживаемые расширения png, jpg, jpeg, gif.`,
+      `Invalid picture name ${originalImageFileName}. The picture directory should contain only pictures with names corresponding to breakpoints. Supported extensions are png, jpg, jpeg, gif.`,
     );
   }
 
   const breakpointName = matches.groups['breakpointName'];
   const originalExtension = matches.groups['originalExtension'];
 
-  // order нам понадобится для сортировки массива различных разрешений одной картинки
+  // we need order to sort an array of different resolutions for one picture
   const order =
     breakpointName === all
       ? -1
       : breakpoints.findIndex((breakpoint) => breakpoint.name === breakpointName);
   const breakpointMedia = breakpointName === all ? null : getBreakpointMedia(breakpoints[order]);
 
-  // Получаем путь до картинки (outputImagePath = '/build/myImage/mobile.all-4b767a7b.png')
+  // Get the path to the image (outputImagePath = '/build/myImage/mobile.all-4b767a7b.png')
   const outputImagePath = source.replace(
     /^module.exports = (__webpack_public_path__ \+ )?"(.+)";$/,
     (a, b, imagePath) => imagePath,
   );
 
   let webpSrcSet: SrcSet, originalExtensionSrcSet: SrcSet, data: OrderedBreakpointSource;
-  // Отключает процессинг картинок, генерируется srcSet только для оригинального типа изображения
+  // Disables picture processing, srcSet is generated only for the original image type
   if (options.imgproxy.disable) {
     data = {
       order,
@@ -106,7 +107,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
         },
       ],
     };
-    // Добавляем ссылки на картинки через imgproxy в глобальный объект
+    // Add links to images via imgproxy to the global object
     imageUrls.push(
       ...(Object.values(webpSrcSet) as string[]),
       ...(Object.values(originalExtensionSrcSet) as string[]),

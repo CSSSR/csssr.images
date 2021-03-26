@@ -1,7 +1,5 @@
 import { backgroundCss } from '../index';
 
-// TODO Можно здесь подсмотреть более симпатичный репортинг завалившихся тестов
-// https://gist.github.com/cassidoo/c726872858ce14e793a26619bd6a358f
 expect.extend({
   toBeSameCss(received, expected) {
     const replaceWhitespace = (str: string) => str.replace(/\s+/g, ' ').trim();
