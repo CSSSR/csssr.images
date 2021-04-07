@@ -17,12 +17,18 @@
       "webpack-env",
       "jest"
     ],
-    "esModuleInterop": true
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "webpack": ["./node_modules/@types/webpack/index.d.ts"],
+    },
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "src/**/__tests__/*"
+    "src/**/__tests__/*",
+    "node_modules"
   ]
 }
