@@ -1,19 +1,17 @@
 import { Compiler } from 'webpack';
 
-// Храним все ссылки на картинки через imgproxy здесь,
-// чтобы после сборки пройтись по ним и убедиться, что они созданы
-// и не будут генерироваться при работе с сайтом.
+// We store all the links to the images through imgproxy here,
+// to go through them after building and make sure they are created
+// and will not be generated when we build the site.
 export const imageUrls: string[] = [];
 
 const pluginName = 'CollectAllImageUrlsPlugin';
 
-// TODO imageUrls накапливаются, если запускать этот плагин в watch режиме
-// Надо либо по обработанным файлам собирать инфу о ссылках, либо сбрасывать массив при рестарте webpack'а
 export class Plugin {
   apply(compiler: Compiler): void {
     compiler.hooks.emit.tapAsync(pluginName, (compilation, callback) => {
       const imgproxyUrls = JSON.stringify(imageUrls);
-      // Добавляет файл в директорию со сборкой
+      // Adds a file to the directory with the assembly
       compilation.assets['imgproxyUrls.json'] = {
         source: function () {
           return imgproxyUrls;
