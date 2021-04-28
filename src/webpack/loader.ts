@@ -68,7 +68,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
     (a, b, imagePath) => imagePath,
   );
 
-  let webpSrcSet: SrcSet, originalExtensionSrcSet: SrcSet, data: OrderedBreakpointSource;
+  let avifSrcSet: SrcSet, webpSrcSet: SrcSet, originalExtensionSrcSet: SrcSet, data: OrderedBreakpointSource;
   // Disables picture processing, srcSet is generated only for the original image type
   if (options.imgproxy.disable) {
     data = {
@@ -86,6 +86,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
     };
   } else {
     const buildUrlsForPixelRatios = getImgproxyUrlBuilder(options.imgproxy);
+    avifSrcSet = buildUrlsForPixelRatios(pixelRatios, outputImagePath, 'avif');
     webpSrcSet = buildUrlsForPixelRatios(pixelRatios, outputImagePath, 'webp');
     originalExtensionSrcSet = buildUrlsForPixelRatios(
       pixelRatios,
@@ -98,6 +99,10 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
       breakpointMedia,
       srcSets: [
         {
+          extension: 'avif',
+          srcSet: avifSrcSet,
+        },
+        {
           extension: 'webp',
           srcSet: webpSrcSet,
         },
@@ -109,6 +114,7 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
     };
     // Add links to images via imgproxy to the global object
     imageUrls.push(
+      ...(Object.values(avifSrcSet) as string[]),
       ...(Object.values(webpSrcSet) as string[]),
       ...(Object.values(originalExtensionSrcSet) as string[]),
     );

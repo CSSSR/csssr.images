@@ -5,7 +5,7 @@ import { backgroundCssSmart } from '../src/utils/backgroundCss';
 import { getOriginal } from '../src/utils';
 
 // Adds 'webp' class to html element if the browser supports webp.
-import '../src/utils/webpDetector';
+import '../src/utils/imgSupportDetector';
 
 const oneImageForAllBreakpoints = require.context('./images/oneImageForAllBreakpoints');
 const differentBreakpoints = require.context('./images/differentBreakpoints');
