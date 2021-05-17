@@ -9,7 +9,15 @@ const breakpointMedia = (media: string | null): ((nestedCss: string) => string) 
 };
 
 const getSelector = (selector: string, extension: string) => {
-  return extension === 'webp' ? `html.webp ${selector}` : selector;
+  if (extension === 'avif') {
+    return `html.avif ${selector}`;
+  }
+
+  if (extension === 'webp') {
+    return `html.webp ${selector}`;
+  }
+
+  return selector;
 };
 
 const srcSetCss = (selector: string, sources: ExtensionSrcSet[]): string => {
