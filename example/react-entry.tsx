@@ -4,7 +4,7 @@ import { PictureSmart } from '../src/react';
 import { backgroundCssSmart } from '../src/utils/backgroundCss';
 import { getOriginal } from '../src/utils';
 
-// Adds 'webp' class to html element if the browser supports webp.
+// Adds 'webp' or 'avif' class to html element if the browser supports it.
 import '../src/utils/imgSupportDetector';
 
 const oneImageForAllBreakpoints = require.context('./images/oneImageForAllBreakpoints');

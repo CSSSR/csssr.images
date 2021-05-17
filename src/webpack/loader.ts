@@ -19,6 +19,7 @@ export type LoaderOptions = {
     disable: boolean;
     imagesHost: string;
     host: string;
+    generateAvif: boolean;
   };
   originalPixelRatio: Dpr;
 };
@@ -99,10 +100,6 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
       breakpointMedia,
       srcSets: [
         {
-          extension: 'avif',
-          srcSet: avifSrcSet,
-        },
-        {
           extension: 'webp',
           srcSet: webpSrcSet,
         },
@@ -112,9 +109,20 @@ export const loader = function (this: webpack.loader.LoaderContext, source: stri
         },
       ],
     };
+
+    if (options.imgproxy.generateAvif) {
+      data.srcSets.unshift({
+        extension: 'avif',
+        srcSet: avifSrcSet,
+      })
+
+      imageUrls.push(
+        ...(Object.values(avifSrcSet) as string[]),
+      );
+    } 
+    
     // Add links to images via imgproxy to the global object
     imageUrls.push(
-      ...(Object.values(avifSrcSet) as string[]),
       ...(Object.values(webpSrcSet) as string[]),
       ...(Object.values(originalExtensionSrcSet) as string[]),
     );
