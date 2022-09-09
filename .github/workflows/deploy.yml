@@ -8,6 +8,10 @@ jobs:
   deploy:
     name: Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      deployments: write
     environment:
       name: production
       url: https://images.csssr.com
@@ -35,12 +39,26 @@ jobs:
           HOST: http://master.csssr-images.csssr.cloud
           IMGPROXY_HOST: https://images.csssr.com
 
+      - name: Import secrets
+        id: secrets
+        uses: hashicorp/vault-action@v2.4.0
+        with:
+          url: https://vault.csssr.com:8200
+          jwtGithubAudience: ${{secrets.VAULT_JWT_KEY}}
+          role: s3-cdn-upload
+          method: jwt
+          exportEnv: false
+          secrets: |
+            aws/sts/s3-cdn-upload access_key | AWS_ACCESS_KEY_ID ;
+            aws/sts/s3-cdn-upload secret_key | AWS_SECRET_ACCESS_KEY ;
+            aws/sts/s3-cdn-upload security_token | AWS_SESSION_TOKEN ;
+
       - name: Deploy
         uses: ./actions/deploy-static-site/v1beta1
         with:
-          auth: ${{ secrets.CDN_UPLOAD_SECRET }}
+          auth: 'aws:${{steps.secrets.outputs.AWS_ACCESS_KEY_ID}}:${{steps.secrets.outputs.AWS_SECRET_ACCESS_KEY}}:${{steps.secrets.outputs.AWS_SESSION_TOKEN}}'
           token: ${{ secrets.GITHUB_TOKEN }}
           site-type: mpa
           project-id: csssr-images
           files: ./csssr_images/example
-          no-previous-files: "true"
+          no-previous-files: 'true'
